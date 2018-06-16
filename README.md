@@ -1,6 +1,6 @@
 # MTProto-Onekey
-## MTProto EASY TO USE
-### Index: [v2ray-install.ml](https://www.v2ray-install.ml)
+## MTPROTO EASY TO USE
+### Index: [mtproto.easy-use.ml](https://mtproto.easy-use.ml)
 - - -
 ## Copy the command to your vps & execute it:
 ```bash
