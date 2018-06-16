@@ -200,7 +200,7 @@ function data_processing(){
 			fi
 			clear
 			echo -e "Host:Port | ${green_backgroundcolor}${Address}:${install_port}${default_fontcolor}"
-			echo -e "Secret：${green_backgroundcolor}$(cat /usr/local/mtproto/secret)${default_fontcolor}\n\n"
+			echo -e "Secret | ${green_backgroundcolor}$(cat /usr/local/mtproto/secret)${default_fontcolor}\n\n"
 			stty erase '^H' && read -p "请输入Proxy Tag(可空)：" install_proxytag
 			if [[ ${install_proxytag} = "" ]]; then
 				install_proxytag=""
