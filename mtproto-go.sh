@@ -199,6 +199,10 @@ function data_processing(){
 				exit 1
 			fi
 			clear
+			echo -e "您的连接信息如下："
+			echo -e "服务器地址：${Address}"
+			echo -e "端口：${install_port}"
+			echo -e "Secret：$(cat /usr/local/mtproto/secret)\n\n"
 			stty erase '^H' && read -p "请输入Proxy Tag(可空)：" install_proxytag
 			if [[ ${install_proxytag} = "" ]]; then
 				install_proxytag=""
