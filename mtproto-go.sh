@@ -473,7 +473,6 @@ function uninstall_program(){
 		service mtproto stop
 		systemctl disable mtproto.service
 		rm -rf /etc/systemd/system/mtproto.service
-		update-rc.d -f mtproto remove
 		rm -rf /usr/local/mtproto
 		if [[ $? -eq 0 ]];then
 			clear
