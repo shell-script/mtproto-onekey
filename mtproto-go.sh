@@ -104,7 +104,7 @@ MTProto当前运行状态：${mtproto_status}
 	6.关闭程序
 	7.重启程序
 --------------------------------------------------------------------------------------------------
-客户端运行指令：${mtproto_use_command}
+Telegram代理连接：${mtproto_use_command}
 --------------------------------------------------------------------------------------------------"
 	stty erase '^H' && read -p "请输入序号：" determine_type
 	if [[ ${determine_type} = "" ]]; then
@@ -127,9 +127,7 @@ MTProto当前运行状态：${mtproto_status}
 function data_processing(){
 	clear
 	echo -e "正在处理请求中..."
-	if [[ ${determine_type} = "0" ]]; then
-		uninstall_old
-	elif [[ ${determine_type} = "2" ]]; then
+	if [[ ${determine_type} = "2" ]]; then
 		upgrade_shell_script
 	elif [[ ${determine_type} = "3" ]]; then
 		prevent_uninstall_check
