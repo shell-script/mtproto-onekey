@@ -469,16 +469,38 @@ function uninstall_program(){
 	install_type=$(cat /usr/local/mtproto/install_type.txt)
 	if [[ "${install_type}" -eq "1" ]]; then
 		service mtproto stop
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}停止MTProto成功。"
+		else
+			clear
+			echo -e "${error_font}停止MTProto失败！"
+		fi
 		systemctl disable mtproto.service
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}取消开机自启动成功。"
+		else
+			clear
+			echo -e "${error_font}取消开机自启动失败！"
+		fi
 		rm -rf /etc/systemd/system/mtproto.service
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}删除mtproto_service成功。"
+		else
+			clear
+			echo -e "${error_font}删除mtproto_service失败！"
+		fi
 		rm -rf /usr/local/mtproto
 		if [[ $? -eq 0 ]];then
 			clear
-			echo -e "${ok_font}MTProto卸载成功。"
+			echo -e "${ok_font}删除MTProto文件夹成功。"
 		else
 			clear
-			echo -e "${error_font}MTProto卸载失败！"
+			echo -e "${error_font}删除MTProto文件夹失败！"
 		fi
+		echo -e "${ok_font}MTProto卸载成功。"
 	fi
 }
 
@@ -624,17 +646,46 @@ function clear_install(){
 	echo -e "正在卸载中..."
 	if [ "${determine_type}" -eq "1" ]; then
 		rm -rf /tmp/make_mtproto
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}清理临时目录成功。"
+		else
+			clear
+			echo -e "${error_font}清理临时目录失败！"
+		fi
 		service mtproto stop
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}停止MTProto成功。"
+		else
+			clear
+			echo -e "${error_font}停止MTProto失败！"
+		fi
 		systemctl disable mtproto.service
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}取消开机自启动成功。"
+		else
+			clear
+			echo -e "${error_font}取消开机自启动失败！"
+		fi
 		rm -rf /etc/systemd/system/mtproto.service
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}删除mtproto_service成功。"
+		else
+			clear
+			echo -e "${error_font}删除mtproto_service失败！"
+		fi
 		rm -rf /usr/local/mtproto
 		if [[ $? -eq 0 ]];then
 			clear
-			echo -e "${ok_font}MTProto卸载成功。"
+			echo -e "${ok_font}删除MTProto文件夹成功。"
 		else
 			clear
-			echo -e "${error_font}MTProto卸载失败！"
+			echo -e "${error_font}删除MTProto文件夹失败！"
 		fi
+		echo -e "${ok_font}MTProto卸载成功。"
 	fi
 }
 
@@ -659,6 +710,9 @@ function generate_base_config(){
 	clear
 	echo "正在生成基础信息中..."
 	Address=$(curl https://ipinfo.io/ip)
+	if [[ ${Address} = "" ]]; then
+		Address=$(curl https://api.ip.sb/ip)
+	fi
 	cpu_core=$(grep 'processor' /proc/cpuinfo | sort -u | wc -l)
 	if [[ ${Address} = "" ]]; then
 		clear
