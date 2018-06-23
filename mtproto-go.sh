@@ -190,17 +190,17 @@ function data_processing(){
 			clear
 			stty erase '^H' && read -p "请输入Secret(可空)：" install_secret
 			if [[ ${install_secret} = "" ]]; then
-				install_secret=$(head -c 16 /dev/urandom | xxd -ps > /usr/local/mtproto/secret)
+				install_secret=$(head -c 16 /dev/urandom | xxd -ps)
 				echo -e "${install_secret}" > /usr/local/mtproto/install_secret.txt
 			else
 				echo -e "${install_secret}" > /usr/local/mtproto/install_secret.txt
 			fi
 			if [[ $? -eq 0 ]];then
 				clear
-				echo -e "${ok_font}配置secret成功。"
+				echo -e "${ok_font}配置Secret成功。"
 			else
 				clear
-				echo -e "${error_font}配置secret失败！"
+				echo -e "${error_font}配置Secret失败！"
 				clear_install
 				exit 1
 			fi
