@@ -47,7 +47,16 @@ function check_os(){
 	clear
 	echo -e "正在检测系统架构是否被支持..."
 	system_bit=$(uname -m)
-	if  [[ ${system_bit} = "x86_64" ]]; then
+	if [[ ${system_bit} = "i386" ]]; then
+		clear
+		echo -e "${ok_font}该脚本支持您的系统架构。"
+	elif [[ ${system_bit} = "i686" ]]; then
+		clear
+		echo -e "${ok_font}该脚本支持您的系统架构。"
+	elif [[ ${system_bit} = "x86" ]]; then
+		clear
+		echo -e "${ok_font}该脚本支持您的系统架构。"
+	elif [[ ${system_bit} = "x86_64" ]]; then
 		clear
 		echo -e "${ok_font}该脚本支持您的系统架构。"
 	else
