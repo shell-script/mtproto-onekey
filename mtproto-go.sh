@@ -224,7 +224,7 @@ function data_processing(){
 			fi
 			clear
 			echo -e "Host:Port | ${green_backgroundcolor}${Address}:${install_port}${default_fontcolor}"
-			echo -e "Secret | ${green_backgroundcolor}$(cat /usr/local/mtproto/secret)${default_fontcolor}\n\n"
+			echo -e "Secret | ${green_backgroundcolor}${install_secret}${default_fontcolor}\n\n"
 			stty erase '^H' && read -p "请输入Proxy Tag(可空)：" install_proxytag
 			if [[ ${install_proxytag} = "" ]]; then
 				install_proxytag=""
@@ -817,11 +817,11 @@ function open_port(){
 function echo_mtproto_config(){
 	if [[ ${determine_type} = "1" ]]; then
 		clear
-		telegram_link="https://t.me/proxy?server=${Address}&port=${install_port}&secret=$(cat /usr/local/mtproto/secret)" 
+		telegram_link="https://t.me/proxy?server=${Address}&port=${install_port}&secret=${install_secret}" 
 		echo -e "您的连接信息如下："
 		echo -e "服务器地址：${Address}"
 		echo -e "端口：${install_port}"
-		echo -e "Secret：$(cat /usr/local/mtproto/secret)"
+		echo -e "Secret：${install_secret}"
 		echo -e "Telegram设置指令：${green_backgroundcolor}${telegram_link}${default_fontcolor}"
 	fi
 	echo -e "${telegram_link}" > /usr/local/mtproto/telegram_link.txt
