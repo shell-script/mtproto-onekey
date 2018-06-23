@@ -256,7 +256,7 @@ function data_processing(){
 Description=mtproto
 After=network.target
 [Service]
-ExecStart=/usr/local/mtproto/mtproto -u nobody -p 64335 -H ${install_port} -S ${install_secret}${install_proxytag}${install_natinfo} --aes-pwd /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-multi.conf
+ExecStart=/usr/local/mtproto/mtproto -6 -u nobody -p ${mtproto_listen_port} -H ${install_port} -S ${install_secret}${install_proxytag}${install_natinfo} --aes-pwd /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-multi.conf
 Restart=always
 [Install]
 WantedBy=multi-user.target
@@ -803,6 +803,7 @@ function generate_base_config(){
 		Address=$(curl https://api.ip.sb/ip)
 	fi
 	cpu_core=$(grep 'processor' /proc/cpuinfo | sort -u | wc -l)
+	let mtproto_listen_port=$RANDOM+10000
 	if [[ ${Address} = "" ]]; then
 		clear
 		echo -e "${error_font}读取vps_ip失败！"
@@ -820,6 +821,12 @@ function generate_base_config(){
 	else
 		clear
 		echo -e "${ok_font}您的CPU核心数为：${cpu_core}"
+	fi
+	if [[ 0 -eq $(lsof -i:"${mtproto_listen_port}" | wc -l) ]];then
+		clear
+		echo -e "${ok_font}生成的监听端口为： ${mtproto_listen_port}"
+	else
+		generate_base_config
 	fi
 }
 
