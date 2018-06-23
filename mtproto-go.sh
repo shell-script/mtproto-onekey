@@ -185,8 +185,16 @@ function data_processing(){
 				clear_install
 				exit 1
 			fi
+			clear
 			input_port
-			head -c 16 /dev/urandom | xxd -ps > /usr/local/mtproto/secret
+			clear
+			stty erase '^H' && read -p "请输入Secret(可空)：" install_secret
+			if [[ ${install_secret} = "" ]]; then
+				install_secret=$(head -c 16 /dev/urandom | xxd -ps > /usr/local/mtproto/secret)
+				echo -e "${install_secret}" > /usr/local/mtproto/install_secret.txt
+			else
+				echo -e "${install_secret}" > /usr/local/mtproto/install_secret.txt
+			fi
 			if [[ $? -eq 0 ]];then
 				clear
 				echo -e "${ok_font}配置secret成功。"
@@ -197,35 +205,53 @@ function data_processing(){
 				exit 1
 			fi
 			clear
+			stty erase '^H' && read -p "请输入NAT-INFO(可空)：" install_natinfo
+			if [[ ${install_natinfo} = "" ]]; then
+				install_natinfo=""
+				echo -e "${install_natinfo}" > /usr/local/mtproto/install_natinfo.txt
+			else
+				echo -e "${install_natinfo}" > /usr/local/mtproto/install_natinfo.txt
+				install_natinfo=" --nat-info "${install_natinfo}
+			fi
+			if [[ $? -eq 0 ]];then
+				clear
+				echo -e "${ok_font}配置NAT-INFO成功。"
+			else
+				clear
+				echo -e "${error_font}配置NAT-INFO失败！"
+				clear_install
+				exit 1
+			fi
+			clear
 			echo -e "Host:Port | ${green_backgroundcolor}${Address}:${install_port}${default_fontcolor}"
 			echo -e "Secret | ${green_backgroundcolor}$(cat /usr/local/mtproto/secret)${default_fontcolor}\n\n"
 			stty erase '^H' && read -p "请输入Proxy Tag(可空)：" install_proxytag
 			if [[ ${install_proxytag} = "" ]]; then
 				install_proxytag=""
 				echo -e "${install_proxytag}" > /usr/local/mtproto/install_proxytag.txt
-				cat <<-EOF > /etc/systemd/system/mtproto.service
-[Unit]
-Description=mtproto
-After=network.target
-[Service]
-ExecStart=/usr/local/mtproto/mtproto -u nobody -p 64335 -H $(cat /usr/local/mtproto/install_port.txt) -S $(cat /usr/local/mtproto/secret) --aes-pwd /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-multi.conf
-Restart=on-abort
-[Install]
-WantedBy=multi-user.target
-				EOF
 			else
 				echo -e "${install_proxytag}" > /usr/local/mtproto/install_proxytag.txt
-				cat <<-EOF > /etc/systemd/system/mtproto.service
+				install_proxytag=" -P "${install_proxytag}
+			fi
+			if [[ $? -eq 0 ]];then
+				clear
+				echo -e "${ok_font}配置Proxy Tag成功。"
+			else
+				clear
+				echo -e "${error_font}配置Proxy Tag失败！"
+				clear_install
+				exit 1
+			fi
+			cat <<-EOF > /etc/systemd/system/mtproto.service
 [Unit]
 Description=mtproto
 After=network.target
 [Service]
-ExecStart=/usr/local/mtproto/mtproto -u nobody -p 64335 -H $(cat /usr/local/mtproto/install_port.txt) -S $(cat /usr/local/mtproto/secret) --aes-pwd /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-multi.conf -P ${install_proxytag}
-Restart=on-abort
+ExecStart=/usr/local/mtproto/mtproto -u nobody -p 64335 -H ${install_port} -S ${install_secret}${install_proxytag}${install_natinfo} --aes-pwd /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-multi.conf
+Restart=always
 [Install]
 WantedBy=multi-user.target
-				EOF
-			fi
+			EOF
 			if [[ $? -eq 0 ]];then
 				clear
 				echo -e "${ok_font}配置mtproto_service成功。"
