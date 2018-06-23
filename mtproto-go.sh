@@ -174,7 +174,7 @@ function data_processing(){
 				exit 1
 			fi
 			make_mtproto
-			wget "https://core.telegram.org/getProxySecret" -O "/usr/local/mtproto/mtproto-secret"
+			curl "https://core.telegram.org/getProxySecret" -o "/usr/local/mtproto/mtproto-secret"
 			if [[ $? -eq 0 ]];then
 				clear
 				echo -e "${ok_font}下载配置文件成功。"
@@ -184,7 +184,7 @@ function data_processing(){
 				clear_install
 				exit 1
 			fi
-			wget "https://core.telegram.org/getProxyConfig" -O "/usr/local/mtproto/mtproto-multi.conf"
+			curl "https://core.telegram.org/getProxyConfig" -o "/usr/local/mtproto/mtproto-multi.conf"
 			if [[ $? -eq 0 ]];then
 				clear
 				echo -e "${ok_font}下载配置文件成功。"
@@ -554,6 +554,24 @@ function upgrade_program(){
 			echo -e "${error_font}备份旧文件失败！"
 			exit 1
 		fi
+		mv /usr/local/mtproto/mtproto-secret /usr/local/mtproto/mtproto-secret.bak
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}备份旧文件成功。"
+		else
+			clear
+			echo -e "${error_font}备份旧文件失败！"
+			exit 1
+		fi
+		mv /usr/local/mtproto/mtproto-multi.conf /usr/local/mtproto/mtproto-multi.conf.bak
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}备份旧文件成功。"
+		else
+			clear
+			echo -e "${error_font}备份旧文件失败！"
+			exit 1
+		fi
 		echo -e "更新MTProto主程序中..."
 		clear
 		generate_base_config
@@ -628,6 +646,26 @@ function upgrade_program(){
 			recovery_update
 			exit 1
 		fi
+		curl "https://core.telegram.org/getProxySecret" -o "/usr/local/mtproto/mtproto-secret"
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}下载配置文件成功。"
+		else
+			clear
+			echo -e "${error_font}下载配置文件失败！"
+			recovery_update
+			exit 1
+		fi
+		curl "https://core.telegram.org/getProxyConfig" -o "/usr/local/mtproto/mtproto-multi.conf"
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}下载配置文件成功。"
+		else
+			clear
+			echo -e "${error_font}下载配置文件失败！"
+			recovery_update
+			exit 1
+		fi
 		cd /root
 		if [[ $? -eq 0 ]];then
 			clear
@@ -650,6 +688,22 @@ function upgrade_program(){
 		fi
 		clear
 		rm -rf /usr/local/mtproto/mtproto.bak
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}删除备份文件成功。"
+		else
+			clear
+			echo -e "${error_font}删除备份文件失败！"
+		fi
+		rm -rf /usr/local/mtproto/mtproto.bak
+		if [[ $? -eq 0 ]];then
+			clear
+			echo -e "${ok_font}删除备份文件成功。"
+		else
+			clear
+			echo -e "${error_font}删除备份文件失败！"
+		fi
+		rm -rf /usr/local/mtproto/mtproto-secret.bak
 		if [[ $? -eq 0 ]];then
 			clear
 			echo -e "${ok_font}删除备份文件成功。"
